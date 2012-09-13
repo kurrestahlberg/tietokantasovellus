@@ -1,0 +1,31 @@
+/* 
+    Document   : basestyle
+    Created on : Sep 13, 2012, 5:25:21 PM
+    Author     : kstahlberg
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+h1 {
+    text-align: center;
+}
+
+.form_div {
+    text-align: center;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.login {
+    text-align: right;
+}
+
+.registration_form {
+    text-align: right;
+}
+
