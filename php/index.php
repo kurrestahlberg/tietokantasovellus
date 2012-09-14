@@ -7,14 +7,12 @@
         <h1>
             Nutrition management
         </h1>
-        
-        <div class="form_div">
-            <form action="mainpage.php" method="post" class="login">
-                Email address: <input type="text" name="email" /><br />
-                Password: <input type="password" name="password" /><br />
-                <input type="submit" value="Login" />
-            </form>
-            <a href="register.php">Not a member? Register here</a>
-        </div>
+
+        <form action="mainpage.php" method="post" id="login_form">
+            <label for="email">Email address:</label><input type="text" id="email" />
+            <label for="password">Password:</label><input type="password" id="password" />
+            <input type="submit" value="Login" />
+        </form>
+        <a href="register.php">Not a member? Register here</a>
     </body>
 </html>
