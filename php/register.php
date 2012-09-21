@@ -1,3 +1,12 @@
+<?php
+    session_start() or die('FAILED TO START SESSION: ' . error_get_last());
+
+    if(isset($_SESSION['user_id'])) {
+        header('Location: http://kestahlb.users.cs.helsinki.fi/tks/mainpage.php');
+    }
+
+?>
+
 <html>
     <head>
         <title>Register</title>
@@ -8,16 +17,15 @@
             Register to Nutrition management
         </h1>
         
-        <div class="form_div">
-            <form action="mainpage.php?reg=1" method="post" class="registration_form">
-                Email address: <input type="text" name="email" /><br />
-                Age: <input type="text" name="age" /><br />
-                Weight: <input type="text" name="weight" /><br />
-                Height: <input type="text" name="height" /><br />
-                Password: <input type="password" name="password" /><br />
-                Password again: <input type="password" name="password2" /><br />
-                <input type="submit" value="Register" />
-            </form>
-        </div>
+        <form action="register-check.php" method="post" id="registration_form">
+            Name: <input type="text" name="name" /><br />
+            Email address: <input type="text" name="email" /><br />
+            Age: <input type="text" name="age" /><br />
+            Weight: <input type="text" name="weight" /><br />
+            Height: <input type="text" name="height" /><br />
+            Password: <input type="password" name="password" /><br />
+            Password again: <input type="password" name="password2" /><br />
+            <input type="submit" value="Register" />
+        </form>
     </body>
 </html>
