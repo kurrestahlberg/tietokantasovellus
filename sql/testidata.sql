@@ -1,8 +1,13 @@
-INSERT INTO USER_DATA VALUES (0, 'Testi-1', '1980-04-12', 91, 185, 'testi@testi.com', md5('testi'));
-INSERT INTO USER_DATA VALUES (1, 'Testi-2', '1980-04-12', 91, 185, 'testi2@testi.com', md5('testi2'));
-INSERT INTO USER_DATA VALUES (2, 'Testi-3', '1980-04-12', 91, 185, 'testi3@testi.com', md5('testi3'));
-INSERT INTO USER_DATA VALUES (3, 'Testi-4', '1980-04-12', 91, 185, 'testi4@testi.com', md5('testi4'));
-INSERT INTO USER_DATA VALUES (4, 'Testi-5', '1980-04-12', 91, 185, 'testi5@testi.com', md5('testi5'));
+INSERT INTO USER_DATA VALUES (1, 1, 'Testi-1', '1980-04-12', 91, 185, 'testi@testi.com', md5('testi'), substring(md5(random()::TEXT) from 1 for 8));
+UPDATE USER_DATA SET pw_hash=md5('testi' || USER_DATA.pw_salt) WHERE id=1;
+INSERT INTO USER_DATA VALUES (2, DEFAULT, 'Testi-2', '1980-04-12', 91, 185, 'testi2@testi.com', md5('testi2'), substring(md5(random()::TEXT) from 1 for 8));
+UPDATE USER_DATA SET pw_hash=md5('testi2' || USER_DATA.pw_salt) WHERE id=2;
+INSERT INTO USER_DATA VALUES (3, DEFAULT, 'Testi-3', '1980-04-12', 91, 185, 'testi3@testi.com', md5('testi3'), substring(md5(random()::TEXT) from 1 for 8));
+UPDATE USER_DATA SET pw_hash=md5('testi3' || USER_DATA.pw_salt) WHERE id=3;
+INSERT INTO USER_DATA VALUES (4, DEFAULT, 'Testi-4', '1980-04-12', 91, 185, 'testi4@testi.com', md5('testi4'), substring(md5(random()::TEXT) from 1 for 8));
+UPDATE USER_DATA SET pw_hash=md5('testi4' || USER_DATA.pw_salt) WHERE id=4;
+INSERT INTO USER_DATA VALUES (5, DEFAULT, 'Testi-5', '1980-04-12', 91, 185, 'testi5@testi.com', md5('testi5'), substring(md5(random()::TEXT) from 1 for 8));
+UPDATE USER_DATA SET pw_hash=md5('testi5' || USER_DATA.pw_salt) WHERE id=5;
 
 INSERT INTO ACTIVITY_TYPE VALUES (0, 'Running', 15.0);
 INSERT INTO ACTIVITY_TYPE VALUES (1, 'Walking', 5.0);

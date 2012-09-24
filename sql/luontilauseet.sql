@@ -1,12 +1,14 @@
 CREATE TABLE USER_DATA
 (
 	id SERIAL PRIMARY KEY,
+	type int DEFAULT 0,
 	name text NOT NULL,
 	dob date,
 	weight integer,
 	height integer,
 	email text UNIQUE NOT NULL,
-	pw_hash text
+	pw_hash text,
+	pw_salt text
 );
 
 CREATE TABLE ACTIVITY_TYPE
