@@ -15,7 +15,7 @@ CREATE TABLE ACTIVITY_TYPE
 (
 	id SERIAL PRIMARY KEY,
 	name text UNIQUE NOT NULL,
-	consumption_per_hour real
+	consumption_per_minute real
 );
 
 CREATE TABLE MEAL_TYPE
