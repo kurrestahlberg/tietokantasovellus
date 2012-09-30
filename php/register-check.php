@@ -91,9 +91,12 @@
         $pw = pg_escape_string($_POST['password']);
 
         $query = "INSERT INTO USER_DATA VALUES (DEFAULT, '{$name}', '1980-04-12', {$_POST['weight']}, ";
-        $query .= "{$_POST['height']}, '{$email}', md5('{$pw}'))";
-
+        $query .= "{$_POST['height']}, '{$email}', md5('{$pw}')), substring(md5(random()::TEXT) from 1 for 8)";
+        
         $result = pg_query($dbconn, $query) or die('Query failed: ' . pg_last_error());
+        
+        $query = "UPDATE USER_DATA SET pw_hash=md5('{$pw}' || USER_DATA.pw_salt) WHERE email='{$email}'";
+
     
 ?>
 

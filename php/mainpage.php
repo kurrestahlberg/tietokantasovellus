@@ -26,7 +26,7 @@
         $pw = pg_escape_string($dbconn, $_POST['password']);
 
         $query = "SELECT id,name FROM USER_DATA WHERE email = '{$email}' ";
-        $query .= "AND pw_hash = md5('{$pw}')";
+        $query .= "AND pw_hash = md5('{$pw}' || USER_DATA.pw_salt)";
 
         $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 

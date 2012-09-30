@@ -23,9 +23,28 @@
             $comment = pg_escape_string($_POST['comment']);
 
             $query = "INSERT INTO MEAL VALUES (DEFAULT, {$_POST['type']}, {$id}, "
-                . "'{$_POST['date']}', '{$comment}')";
+                . "'{$_POST['date']}', '{$comment}') RETURNING MEAL.id";
 
             $result = pg_query($dbconn, $query) or die('Meal adding failed: ' . pg_last_error());
+            
+            $meal_id = pg_fetch_row($result);
+            
+            $foodcount = 5;
+            if(isset($_POST['foodcount'])) {
+                $foodcount = intval($_POST['foodcount']);
+            }
+            $count = 1;
+            while($count <= $foodcount) {
+                if(isset($_POST['food'.$count]) && is_numeric($_POST['food'.$count])) {
+                    $food_id = $_POST['food'.$count];
+                    $food_amount = $_POST['food'.$count.'amount'];
+                    
+                    $query = "INSERT INTO FOOD_MEAL_MAP VALUES (DEFAULT, ".$meal_id[0].",".$food_id.",".$food_amount.")";
+                    $result = pg_query($dbconn, $query) or die('Adding food to meal failed: '.  pg_last_error());
+                }
+                $count++;
+            }
+            
             $success = true;
         } else {
             $default_type = $_POST['type'];
@@ -46,19 +65,28 @@
                 mealselect = e.target;
                 meallabel = e.target.id + "div";
                 text = 'jep';
-                index = mealselect.options[mealselect.selectedIndex].value;
+                index = mealselect.options[mealselect.selectedIndex].id;
                 switch(index) {
-                    case '1':
-                        text = 'yks';
-                        break;
-                    case '2':
-                        text = 'kaks';
-                        break;
-                    case '3':
-                        text = 'kolme';
-                        break;
+<?php
+        $query = "SELECT id,name FROM FOOD_UNIT_TYPE";
+        $result = pg_query($query) or die('Food unit type query failed: ' . pg_last_error());
+
+        
+        $food_unit_types = array();
+        
+        while($row = pg_fetch_row($result)) {
+            $food_unit_types[$row[0]] = $row[1];
+        }
+        
+        foreach($food_unit_types as $key => $unit_type) {
+            echo "case '{$key}':\n"
+                ."text = '{$unit_type}';\n"
+                ."break;\n";
+
+        }
+?>
                     default:
-                        text = 'default';
+                        text = '';
                         break;
                 }
                 document.getElementById(meallabel).innerHTML = text;
@@ -99,30 +127,38 @@
             Date: <input type="date" name="date" value="<?php echo $default_date; ?>"/><br />
             Comment: <textarea name="comment"><?php echo $default_comment; ?></textarea><br />
             
-            <div>
-                <select class="_75" type="text" name="unit1" id="unit1" onChange="javascript:setFoodUnit(event);">
-                    <option value="1">jep1</option>
-                    <option value="2">jep2</option>
-                    <option value="3">jep3</option>
+<?php
+        $query = "SELECT id,name,unit_type_id FROM FOOD";
+        $result = pg_query($query) or die('Food query failed: ' . pg_last_error());
+
+        $foods = array();
+        $food_unit_type_ids = array();
+        
+        while($row = pg_fetch_row($result)) {
+            $foods[$row[0]] = $row[1];
+            $food_unit_type_ids[$row[0]] = $row[2];
+        }
+        
+        for($i = 1; $i < 6; $i++) {
+?>
+            <div class="_100">
+                <select class="_50" type="text" name="food<?php echo $i; ?>" 
+                        id="food<?php echo $i; ?>"
+                        onChange="javascript:setFoodUnit(event);">
+                    <option></option>
+<?php
+            foreach($foods as $key => $food) {
+                echo "<option value=\"{$key}\" id=\"{$food_unit_type_ids[$key]}\">{$food}</option>\n";
+
+            }
+?>
                 </select>
-                <span id="unit1div">kg</span>
-            </div>    
-            <div>
-                <select class="_75" type="text" name="unit2" id="unit2" onChange="javascript:setFoodUnit(event);">
-                    <option value="1">jep1</option>
-                    <option value="2">jep2</option>
-                    <option value="3">jep3</option>
-                </select>
-                <span id="unit2div">kg</span>
-            </div>    
-            <div>
-                <select class="_75" type="text" name="unit3" id="unit3" onChange="javascript:setFoodUnit(event);">
-                    <option value="1">jep1</option>
-                    <option value="2">jep2</option>
-                    <option value="3">jep3</option>
-                </select>
-                <span id="unit3div">kg</span>
-            </div>    
+                <input class="_25" type ="text" name="food<?php echo $i; ?>amount" value="1" />
+                <span id="food<?php echo $i; ?>div"></span>
+            </div>
+<?php
+        }
+?>
             <input type="submit" value="Add" />
         </form>
     <a href="mainpage.php">Back</a>
