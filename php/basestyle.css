@@ -14,7 +14,7 @@ h1 {
     text-align: center;
 }
 
-#login_form {
+form {
     width: 300px;
     margin-left: auto;
     margin-right: auto;
@@ -82,6 +82,14 @@ textarea {
 }
 select {
     border: 1px solid #B3B3B3;
-    width: 100%;
+    width: 75%;
     -moz-border-radius: 3px;
+}
+
+.rightfloat {
+    width: 96%;
+    display: inline;
+    margin-left: 2%;
+    margin-right: 2%;
+    float: right;
 }

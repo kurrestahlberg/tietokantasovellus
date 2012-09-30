@@ -19,7 +19,7 @@
         
         <form action="register-check.php" method="post" id="registration_form">
             Name: <input type="text" name="name" /><br />
-            Email address: <input type="text" name="email" /><br />
+            Email address: <input type="email" name="email" /><br />
             Age: <input type="text" name="age" /><br />
             Weight: <input type="text" name="weight" /><br />
             Height: <input type="text" name="height" /><br />
