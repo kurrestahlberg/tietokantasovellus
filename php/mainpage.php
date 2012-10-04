@@ -65,8 +65,25 @@
                 <div class="_100">
                     <ul>
                         <lh>Your latest meals:</lh>
-                        <li>(12.12.2012 08:12) Breakfast (612 cal)</li>
-                        <li>(12.12.2012 12:12) Lunch (1023 cal)</li>
+<?php
+    $query = "SELECT MEAL.date,MEAL_TYPE.name,slct.cal_sum "
+            ."FROM MEAL_TYPE,MEAL "
+            ."INNER JOIN (SELECT M.id,SUM(FMM.quantity*F.calories_per_unit) "
+            ."AS cal_sum FROM MEAL AS M,FOOD_MEAL_MAP AS FMM,FOOD AS F "
+            ."WHERE M.user_id={$id} AND M.id=FMM.meal_id AND FMM.food_id=F.id "
+            ."GROUP BY M.id) as slct ON MEAL.id=slct.id "
+            ."WHERE MEAL_TYPE.id=MEAL.type_id "
+            ."ORDER BY MEAL.date DESC, MEAL.type_id DESC LIMIT 5";
+    
+    $result = pg_query($query) or die('Meal query failed: ' . pg_last_error());
+    
+    while($row = pg_fetch_row($result)) {
+       echo '<li>('.$row[0].') '.$row[1].' ('.$row[2].' cal)</li>';
+        
+    }
+
+?>
+                        
                     </ul>
                     <a href="add_meal.php" />Add a meal</a>
                 </div>
@@ -82,7 +99,7 @@
     $result = pg_query($query) or die('Activity query failed: ' . pg_last_error());
     
     while($row = pg_fetch_row($result)) {
-       echo '<li>('.$row[0].') '.$row[1].'('.strval(intval($row[2])*intval($row[3])).' cal burned)</li>';
+       echo '<li>('.$row[0].') '.$row[1].' ('.strval(intval($row[2])*intval($row[3])).' cal burned)</li>';
         
     }
 
