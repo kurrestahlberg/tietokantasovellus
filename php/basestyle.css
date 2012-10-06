@@ -93,3 +93,19 @@ select {
     margin-right: 2%;
     float: right;
 }
+
+._red {
+    color: red;
+}
+
+._menu {
+    text-align: center;
+    width: 96%;
+    display: inline;
+    float: left;
+    margin-left: 2%;
+    margin-right: 2%;
+    background-color: #F0F0F0;
+    border-style: solid;
+    margin-bottom: 2%;
+}

@@ -51,6 +51,8 @@
         <h1>
             Welcome to Nutrition management <?php echo $name; ?>
         </h1>
+    
+    <?php require('header-menu.php'); ?>
 
         <div class="_100">
             <div id="latest_info" class="_25">
@@ -112,51 +114,103 @@
                 <div class="_50">
                     <div class="_100">
                         <p class="report_title">Intake this week:</p>
-                        <p>Calories: 5235</p>
-                        <p>Protein: 123g</p>
-                        <p>Carbs: 126g</p>
+<?php
+    $query = "SELECT SUM(slct.cal_sum),SUM(slct.prot_sum),SUM(carb_sum) "
+            ."FROM MEAL INNER JOIN "
+            ."(SELECT M.id,SUM(FMM.quantity*F.calories_per_unit) AS cal_sum,"
+            ."SUM(FMM.quantity*F.protein_per_unit) AS prot_sum,"
+            ."SUM(FMM.quantity*F.carbs_per_unit) AS carb_sum "
+            ."FROM MEAL AS M,FOOD_MEAL_MAP AS FMM,FOOD AS F "
+            ."WHERE M.user_id={$id} AND M.id=FMM.meal_id AND FMM.food_id=F.id "
+            ."AND M.date::date > (CURRENT_DATE - INTERVAL '7 days')::date "
+            ."GROUP BY M.id) as slct ON MEAL.id=slct.id ";
+    
+    $result = pg_query($query) or die('Weekly intake query failed: ' . pg_last_error());
+    $row = pg_fetch_row($result);
+    $weekly_intake = $row[0];
+    
+                        echo "Calories: {$row[0]}<br/>";
+                        echo "Protein: {$row[1]}g<br/>";
+                        echo "Carbs: {$row[2]}g";
+?>                         
                     </div>
                     <div class="_100">
                         <p class="report_title">Activity this week:</p>
 <?php
     $query = "SELECT sum(ACTIVITY.duration),sum(ACTIVITY.duration * ACTIVITY_TYPE.consumption_per_minute) "
             . "FROM ACTIVITY, ACTIVITY_TYPE WHERE ACTIVITY.user_id={$id} AND ACTIVITY.type_id=ACTIVITY_TYPE.id "
-            . "AND extract(week from ACTIVITY.date) = extract(week from CURRENT_DATE)";
+            . "AND date::date > (CURRENT_DATE - INTERVAL '7 days')::date";
             
     $result = pg_query($query) or die('Weekly activity query failed: ' . pg_last_error());
     $row = pg_fetch_row($result);
     $minutes = intval($row[0]);
     $hours = intval($minutes / 60);
     $minutes -= $hours * 60;
+    $weekly_burn = $row[1];
 
-    echo "<p>Duration: {$hours}h {$minutes}min</p>";
-    echo "<p>Calories burned: {$row[1]}</p>";
+    echo "Duration: {$hours}h {$minutes}min<br/>";
+    echo "Calories burned: {$row[1]}";
 ?>
+                    </div>
+                    <div class="_100">
+                        <p class="report_title">Total this week: 
+<?php
+                        $weekly_diff = $weekly_intake - $weekly_burn - 7*1750;
+                        if($weekly_diff > 0) echo "<span class='_red'>+{$weekly_diff}cal</span>";
+                        else echo "<span>{$weekly_diff}cal</span>";
+?>
+                        </p>
                     </div>
                 </div>
                 <div class="_50">
                     <div class="_100">
                         <p class="report_title">Intake this month:</p>
-                        <p>Calories: 20235</p>
-                        <p>Protein: 423g</p>
-                        <p>Carbs: 426g</p>
+<?php
+    $query = "SELECT SUM(slct.cal_sum),SUM(slct.prot_sum),SUM(carb_sum) "
+            ."FROM MEAL INNER JOIN "
+            ."(SELECT M.id,SUM(FMM.quantity*F.calories_per_unit) AS cal_sum,"
+            ."SUM(FMM.quantity*F.protein_per_unit) AS prot_sum,"
+            ."SUM(FMM.quantity*F.carbs_per_unit) AS carb_sum "
+            ."FROM MEAL AS M,FOOD_MEAL_MAP AS FMM,FOOD AS F "
+            ."WHERE M.user_id={$id} AND M.id=FMM.meal_id AND FMM.food_id=F.id "
+            ."AND M.date::date > (CURRENT_DATE - INTERVAL '30 days')::date "
+            ."GROUP BY M.id) as slct ON MEAL.id=slct.id ";
+    
+    $result = pg_query($query) or die('Monthly intake query failed: ' . pg_last_error());
+    $row = pg_fetch_row($result);
+    $monthly_intake = $row[0];
+    
+                        echo "Calories: {$row[0]}<br/>";
+                        echo "Protein: {$row[1]}g<br/>";
+                        echo "Carbs: {$row[2]}g";
+?>                         
                     </div>
                     <div class="_100">
                         <p class="report_title">Activity this month:</p>
 <?php
     $query = "SELECT sum(ACTIVITY.duration),sum(ACTIVITY.duration * ACTIVITY_TYPE.consumption_per_minute) "
             . "FROM ACTIVITY, ACTIVITY_TYPE WHERE ACTIVITY.user_id={$id} AND ACTIVITY.type_id=ACTIVITY_TYPE.id "
-            . "AND extract(month from ACTIVITY.date) = extract(month from CURRENT_DATE)";
+            . "AND ACTIVITY.date::date > (CURRENT_DATE - INTERVAL '30 days')::date";
             
     $result = pg_query($query) or die('Weekly activity query failed: ' . pg_last_error());
     $row = pg_fetch_row($result);
     $minutes = intval($row[0]);
     $hours = intval($minutes / 60);
     $minutes -= $hours * 60;
+    $monthly_burn = $row[1];
 
-    echo "<p>Duration: {$hours}h {$minutes}min</p>";
-    echo "<p>Calories burned: {$row[1]}</p>";
+    echo "Duration: {$hours}h {$minutes}min<br/>";
+    echo "Calories burned: {$row[1]}";
 ?>
+                    </div>
+                    <div class="_100">
+                        <p class="report_title">Total this month: 
+<?php
+                        $monthly_diff = $monthly_intake - $monthly_burn - 30*1750;
+                        if($monthly_diff > 0) echo "<span class='_red'>+{$monthly_diff}cal</span>";
+                        else echo "<span>{$monthly_diff}cal</span>";
+?>
+                        </p>
                     </div>
                 </div>
             </div>
