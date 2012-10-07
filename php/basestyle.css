@@ -109,3 +109,27 @@ select {
     border-style: solid;
     margin-bottom: 2%;
 }
+
+table {
+    text-align: center;
+    width: 96%;
+    display: inline;
+    float: left;
+    margin-left: 2%;
+    margin-right: 2%;
+    border-style: solid;
+    margin-bottom: 2%;
+}
+
+.indexlist {
+    text-align: center;
+    width: 96%;
+    display: inline;
+    float: left;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+td {
+    background-color: #F0F0F0;
+}
+

@@ -1,17 +1,6 @@
 <?php
-    session_start() or die('FAILED TO START SESSION: ' . error_get_last());
+    require('header-menu.php');
 
-    if(isset($_SESSION['user_id'])) {
-        $name = $_SESSION['user_name'];
-        $id = intval($_SESSION['user_id']);
-        
-    } else {
-        header('Location: http://kestahlb.users.cs.helsinki.fi/tks/index.php');
-    }
-
-    $dbconn = pg_connect("dbname=kestahlb user=kestahlb")
-        or die('Could not connect: ' . pg_last_error());
-    
     $success = false;
     $default_type = 0;
     $default_duration = 60;
@@ -39,12 +28,6 @@
 
 ?>
 
-<html>
-    <head>
-        <title>Add Activity</title>
-        <link rel="stylesheet" type="text/css" href="basestyle.css" />
-    </head>
-    <body>
         <h1>
             <?php
                 if(isset($_POST['type'])) {

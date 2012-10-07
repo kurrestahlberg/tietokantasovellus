@@ -1,16 +1,5 @@
 <?php
-    session_start() or die('FAILED TO START SESSION: ' . error_get_last());
-
-    if(isset($_SESSION['user_id'])) {
-        $name = $_SESSION['user_name'];
-        $id = intval($_SESSION['user_id']);
-        
-    } else {
-        header('Location: http://kestahlb.users.cs.helsinki.fi/tks/index.php');
-    }
-
-    $dbconn = pg_connect("dbname=kestahlb user=kestahlb")
-        or die('Could not connect: ' . pg_last_error());
+    require('header-menu.php');
     
     $success = false;
     $default_type = 0;
@@ -56,10 +45,6 @@
 
 ?>
 
-<html>
-    <head>
-        <title>Add Meal</title>
-        <link rel="stylesheet" type="text/css" href="basestyle.css" />
         <script language ="javascript">
             function setFoodUnit(e) {
                 mealselect = e.target;
@@ -92,8 +77,6 @@
                 document.getElementById(meallabel).innerHTML = text;
             }
         </script>
-    </head>
-    <body>
         <h1>
             <?php
                 if(isset($_POST['type'])) {
@@ -161,6 +144,5 @@
 ?>
             <input type="submit" value="Add" />
         </form>
-    <a href="mainpage.php">Back</a>
     </body>
 </html>

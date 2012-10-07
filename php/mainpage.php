@@ -1,10 +1,3 @@
-<html>
-    <head>
-        <title>Nutrition management</title>
-        <link rel="stylesheet" type="text/css" href="basestyle.css" />
-    </head>
-    <body>
-
 <?php
 
     session_start() or die('FAILED TO START SESSION: ' . error_get_last());
@@ -18,8 +11,9 @@
         
     } else {
         
-        if((!isset($_POST['email'])) || (!isset($_POST['pw']))) {
+        if((!isset($_POST['email'])) || (!isset($_POST['password']))) {
             header('Location: http://kestahlb.users.cs.helsinki.fi/tks/index.php');
+            exit;
         }
     
         $email = pg_escape_string($dbconn, $_POST['email']);
@@ -32,8 +26,17 @@
 
         if(pg_num_rows($result) != 1) {
 ?>
+<html>
+    <head>
+        <title>Nutrition management</title>
+        <link rel="stylesheet" type="text/css" href="basestyle.css" />
+    </head>
+    <body>
             Invalid email address or password! <a href="index.php">Try again</a>
+    </body>
+</html>
 <?php
+            exit;
         } else {
         
             $row = pg_fetch_row($result);
@@ -45,15 +48,15 @@
         }
     }
     
-    if(isset($id)) {
+
+    require('header-menu.php');
+
 ?>
 
         <h1>
             Welcome to Nutrition management <?php echo $name; ?>
         </h1>
     
-    <?php require('header-menu.php'); ?>
-
         <div class="_100">
             <div id="latest_info" class="_25">
                 <div class="_100">
@@ -215,10 +218,6 @@
                 </div>
             </div>
         </div>
-    <a href="index.php?logout=1">logout</a>
-<?php
-    }
-?>
     
     </body>
 </html>
