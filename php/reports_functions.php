@@ -3,22 +3,6 @@
     function generate_reports_table_rows() {
         global $id;
         
-        /*
-        $query = "SELECT S1.week,SUM(S1.cal_sum),SUM(S2.sum)"
-                ."FROM MEAL, "
-                ."(SELECT SUM(FMM.quantity*F.calories_per_unit) AS cal_sum, "
-                ."EXTRACT(week from M.date) as week "
-                ."FROM MEAL AS M,FOOD_MEAL_MAP AS FMM,FOOD AS F "
-                ."WHERE M.user_id={$id} AND M.id=FMM.meal_id AND FMM.food_id=F.id "
-                ."GROUP BY week) AS S1 INNER JOIN "
-                ."(SELECT SUM(A.duration*AT.consumption_per_minute) AS sum,"
-                ."EXTRACT(week from A.date) AS week "
-                ."FROM ACTIVITY AS A,ACTIVITY_TYPE AS AT WHERE A.user_id={$id} "
-                ."AND A.type_id=AT.id GROUP BY week) AS S2 ON S1.week=S2.week "
-                ."GROUP BY S1.week ORDER BY S1.week DESC";
-         * 
-         */
-        
         $query = "SELECT * FROM "
                 ."((SELECT "
                 ."EXTRACT(week from A.date) AS week,"
