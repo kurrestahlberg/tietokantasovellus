@@ -1,0 +1,123 @@
+Johdanto
+
+	Järjestelmä mahdollistaa kalorien saannin ja kulutuksen seurannan. Ideana on päivä-
+	kirjamaisesti kirjata ylös kaikkien aterioiden sisältö ja toisaalta energiaa
+	kuluttavan liikunnan määrä ja laatu. Järjestelmä laskee näistä tiedoista yhteenvedon
+	joka kertoo sujuvasti onko käyttäjän paino menossa ylös vai alas.
+	
+	Järjestelmä on kirjoitettu PHP-kielellä ja se käyttää Postgres-tietokantaa.
+	
+Yleiskuva/käyttäjäryhmät
+
+	Järjestelmän ainoa käyttäjäryhmä on peruskäyttäjä. Mitään erityisiä rajoitteita
+	peruskäyttäjällä ei ole, eli kaikki implementoidut ominaisuudet ovat kaikkien
+	käytettävissä.
+
+Käyttötapaukset
+
+	• Käyttäjä voi kirjautua järjestelmään
+		• yhteenvetosivu avautuu
+	• Kirjautunut käyttäjä voi lisätä päivän aterioiden ruoka-aineet / ruoat
+		• Järjestelmä laskee saadut kalorimäärät
+	• Kirjautunut käyttäjä voi lisätä päivän aktiviteetit
+		• Järjestelmä päivän energiankulutuksen
+	• Kirjautunut käyttäjä voi nähdä listauksen viikottaisesta/kuukausittaisesta 
+		kulutuksesta ja saannista
+	• Kirjautunut käyttäjä voi lisätä uuden ruoka-aineen
+	• Kirjautunut käyttäjä voi lisätä uuden aktiviteetin
+	• Kirjautunut käyttäjä voi liittää ruoka-aineen ruoka-aineryhmään
+	• Kirjautumaton käyttäjä voi rekisteröityä käyttäjäksi
+
+Tietosisältö
+
+	Tietokantakaavio löytyy tiedostosta TKS.png.
+	
+	Kannan taulut:
+	
+	USER_DATA on käyttäjätietotaulu josta löytyy jokaisen käyttäjän tiedot. Taulun "type"
+	-kenttä sisältää käyttäjän tyyppitiedon, eli esim. peruskäyttäjä tai pääkäyttäjä.
+	Tätä tietoa ei käytetä mihinkään.
+	
+	ACTIVITY sisältää käyttäjien liikuntasuoritteet. Yksittäisen suorittee tiedoissa on
+	sen tyyppi ("type_id"), kesto ("duration") ja ajankohta ("date"). Käyttäjä voi myös
+	lisätä suoritteeseen kommentin joka sekin tallennetaan ACTIVITY-tauluun.
+	
+	ACTIVITY_TYPE sisältää aktiviteetit joista käyttäjä voi valita lisätessään
+	aktiviteettia. Jokaisella aktiviteetilla on nimi ("name") ja tieto siitä montako
+	kaloria se kuluttaa per minuutti ("consumption_per_minute")
+	
+	MEAL on käyttäjien ateriataulu joka sisältää jokaisen aterian perustiedot. 
+	
+	FOOD_MEAL_MAP toimii yhdisteenä aterioiden ja ruokien/ruoka-aineiden välillä.
+	Taulussa on yksinkertaisia id-pareja sekä lisäksi määrätieto. Koska yksittäinen ateria
+	voi sisältää jopa kymmeniä eri ruoka-aineita kasvanee tämä taulu melko suureksi.
+	
+	FOOD sisältää järjestelmään lisätyt ruoat/ruoka-aineet ja niistä saatavan energian
+	sekä proteiinien ja hiilihydraattien määrät. Määrät on taulussa yksikkömäärinä 
+	ja vaihtoehtoiset yksiköt on listattu erillisessä "FOOD_UNIT_TYPE"-taulussa. 
+	Yksiköitä ovat esim. litra, kilo ja kappale.
+		
+Käyttöliittymä
+
+	Käyttöliittymä on hahmoteltu tiedostossa doc/TKS_site_map.png
+	
+Ohjelmiston yleisrakenne
+
+	Ohjelmisto on aika raakaa php-koodia jossa ei käytetä juuri mitään kielen tarjoamia
+	hienouksia. Ainoastaan php-koodi ja html-koodi on pyritty eriyttämään toisistaan
+	siten, että valtaosa php-koodista suoritetaan funktioissa joita kutsutaan html-koodin
+	seasta. Tämä yleisen ylläpidettävyyden ja selkeyden vuoksi sekä tietysti jotta
+	vältetään duplikaattikoodia.
+	
+	Pääosin koodi on jaettu siten, että php-funktiot ovat yhdessä tiedostossa 
+	("*_functions.php") ja html-koodi toisessa. Joitain php-funktioita käytetään
+	useammassa paikassa ja ne on koottu tiedostoon common_functions.php
+
+Järjestelmän komponentit
+
+	activities_functions.php:
+		generate_activities_table_rows() - luo aktiviteettitaulukon sisältörivit
+		
+	common_functions.php:
+		check_start() - tarkistaa onko sivun parametreissä "start" joka määrittelee
+		sivujaoteltujen sivujen alkukohdan
+		
+		generate_page_navi() - luo sivujaon hallintalinkit ("<< 1 | 2 >>")
+		
+		update_page_indices() - päivittää sivujaottelun muuttujat alkukohdan perusteella.
+		Jos siis alkukohta on 45 asettaa tämä funktio edellisen sivun alkukohdaksi 30,
+		seuraavan sivun alkukohdaksi 60, tämänhetkiseksi sivuksi 4 jne.
+		
+	mainpage_functions.php:
+		generate_latest_meals() - luo listauksen käyttäjän viimeisimmistä aterioista
+		
+		generate_latest_activities() - luo listauksen käyttäjän viimeisimmistä 
+		aktiviteeteista
+		
+		generate_intake_summary() - luo tiivistelmän käyttäjän viimeaikaisista
+		syömisistä. Funktio ottaa parametrina laskuun mukaan otettavien päivien määrän
+		ja se palauttaa kyseisen ajanjakson kokonaiskalorimäärän.
+		
+		generate_activity_summary() - luo tiivistelmän käyttäjän viimeaikaisista 
+		liikuntasuoritteista. Funktio ottaa parametrina laskuun mukaan otettavien päivien 
+		määrän ja se palauttaa kyseisen ajanjakson kokonaiskulutuksen.
+		
+	meals_functions.php
+		generate_meals_table_rows() - luo ateriataulukon sisältörivit
+		
+	reports_functions.php
+		generate_reports_table_rows() - luo raporttitaulukon sisältörivit	
+
+Asennustiedot
+
+	Järjestelmän asennus pitäisi onnistua varsin kivuttomasti vain kopioimalla kaikki
+	php-tiedostot hakemistoon josta ne voidaan suorittaa sekä muokkaamalla db_connect.php
+	-tiedostoa johon pitää asettaa oikea tietokannan yhdistämismerkkijono.
+	
+	Kun php-tiedostot ovat paikallaan pitää ajaa luontilauseet.sql jonka jälkeen homman
+	pitäisi rokata.
+
+Liitteet
+
+	SQL-luontilauseet: sql/luontilauseet.sql
+	SQL-poistolauseet: sql/poistolauseet.sql

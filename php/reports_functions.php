@@ -20,7 +20,6 @@
                 ."AS J ORDER BY week DESC";
 
         $result = pg_query($query) or die('Intake query failed: ' . pg_last_error());
-        //$row = pg_fetch_row($result);
 
         while($row = pg_fetch_row($result)) {
             echo "<tr>";

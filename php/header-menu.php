@@ -1,5 +1,7 @@
 <?php
 
+    require_once 'db_connect.php';
+
     //This file must always be included from another file
     if(count(get_included_files()) <= 1) {
             //header('Location: http://kestahlb.users.cs.helsinki.fi/tks/index.php');
@@ -18,8 +20,7 @@
             exit;
         }
 
-        $dbconn = pg_connect("dbname=kestahlb user=kestahlb")
-            or die('Could not connect: ' . pg_last_error());
+        $dbconn = db_connect();
         
     }    
 ?>

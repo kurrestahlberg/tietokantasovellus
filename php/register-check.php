@@ -1,12 +1,13 @@
 <?php
+    require_once 'db_connect.php';
+
     session_start() or die('FAILED TO START SESSION: ' . error_get_last());
 
     if(isset($_SESSION['user_id'])) {
         header('Location: http://kestahlb.users.cs.helsinki.fi/tks/mainpage.php');
     }
 
-    $dbconn = pg_connect("dbname=kestahlb user=kestahlb")
-        or die('Could not connect: ' . pg_last_error());
+    $dbconn = db_connect();
 
 
     $register_data_okay = TRUE;
