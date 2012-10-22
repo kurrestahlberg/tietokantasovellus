@@ -49,13 +49,20 @@
                 ."GROUP BY M.id) as slct ON MEAL.id=slct.id ";
 
         $result = pg_query($query) or die('Intake query failed: ' . pg_last_error());
-        $row = pg_fetch_row($result);
-
-        echo "Calories: {$row[0]}<br/>";
-        echo "Protein: {$row[1]}g<br/>";
-        echo "Carbs: {$row[2]}g";
         
-        return $row[0];
+        $row = pg_fetch_row($result);
+        
+        if(!is_null($row[0])) {
+            echo "Calories: {$row[0]}<br/>";
+            echo "Protein: {$row[1]}g<br/>";
+            echo "Carbs: {$row[2]}g";
+            return $row[0];
+        } else {
+            echo "Calories: 0<br/>";
+            echo "Protein: 0g<br/>";
+            echo "Carbs: 0g";
+            return 0;
+        }
     }
     
     function generate_activity_summary($days) {
@@ -67,13 +74,21 @@
 
         $result = pg_query($query) or die('Weekly activity query failed: ' . pg_last_error());
         $row = pg_fetch_row($result);
-        $minutes = intval($row[0]);
-        $hours = intval($minutes / 60);
-        $minutes -= $hours * 60;
+        
+        if(!is_null($row[0])) {
+            $minutes = intval($row[0]);
+            $hours = intval($minutes / 60);
+            $minutes -= $hours * 60;
 
-        echo "Duration: {$hours}h {$minutes}min<br/>";
-        echo "Calories burned: {$row[1]}";
+            echo "Duration: {$hours}h {$minutes}min<br/>";
+            echo "Calories burned: {$row[1]}";
 
-        return $row[1];
+            return $row[1];
+        } else {
+            echo "Duration: 0h 0min<br/>";
+            echo "Calories burned: 0";
+
+            return 0;
+        }
     }
 ?>

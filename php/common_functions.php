@@ -38,6 +38,10 @@
         if($start_index >= $rowcount) {
             $start_index = floor(($rowcount - 1) / $items_per_page) * $items_per_page;
         }
+        
+        if($start_index < 0) {
+            $start_index = 0;
+        }
 
         $prev_index = $start_index - $items_per_page;
         if($prev_index < 0) $prev_index = 0;
@@ -48,6 +52,7 @@
         }
 
         $pagecount = ceil($rowcount / $items_per_page);
+        if($pagecount <= 0) $pagecount = 1;
         $curpage = floor($start_index / $items_per_page);
     }
     
