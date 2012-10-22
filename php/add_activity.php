@@ -63,6 +63,6 @@
             Comment: <textarea name="comment"><?php echo $default_comment; ?></textarea><br />
             <input type="submit" value="Add" />
         </form>
-    <a href="mainpage.php">Back</a>
+        <a href="add_activity_type.php">Add an activity type</a>
     </body>
 </html>

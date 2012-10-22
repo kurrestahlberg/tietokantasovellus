@@ -144,5 +144,6 @@
 ?>
             <input type="submit" value="Add" />
         </form>
+        <a href="add_food.php">Add a food type</a>
     </body>
 </html>
