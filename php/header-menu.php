@@ -15,6 +15,7 @@
 
         } else {
             header('Location: http://kestahlb.users.cs.helsinki.fi/tks/index.php');
+            exit;
         }
 
         $dbconn = pg_connect("dbname=kestahlb user=kestahlb")
@@ -32,7 +33,7 @@
 
         <div class="_menu">
             <a href="mainpage.php">Home</a> | 
-            Reports | 
+            <a href="reports.php">Reports</a> | 
             <a href="meals.php">Meals</a> | 
             <a href="activities.php">Activities</a> | 
             <a href="index.php?logout=1">Logout</a>

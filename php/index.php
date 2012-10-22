@@ -26,7 +26,7 @@
             Nutrition management
         </h1>
 
-        <form action="mainpage.php" method="post" id="login_form">
+        <form action="login_check.php" method="post" id="login_form">
             <label for="email">Email address:</label><input type="text" name="email" />
             <label for="password">Password:</label><input type="password" name="password" />
             <input type="submit" value="Login" />
